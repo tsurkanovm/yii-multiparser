@@ -16,7 +16,7 @@
   ],
   "require": {
     "yiisoft/yii2": "*",
-    "artweb/multiparser": "*"
+    "artweb/multiparser": "dev-master"
   },
   "autoload": {
     "psr-4": {
