@@ -1,7 +1,7 @@
 {
   "name": "artweb/yii-multiparser",
   "type": "library",
-  "description": "Collection of parsers for YII2",
+  "description": "This extension provides a Multiparser solution for Yii framework 2.0.",
   "keywords": [ "yii", "parser", "csv", "xml" ],
   "homepage": "https://github.com/tsurkanovm/multiparser.git",
   "license": "MIT",
