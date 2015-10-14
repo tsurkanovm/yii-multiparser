@@ -1,0 +1,25 @@
+{
+  "name": "artweb/yii-multiparser",
+  "type": "library",
+  "description": "Flexible bunch of parsers for PHP 5.3",
+  "keywords": [ "yii", "parser", "csv", "xml" ],
+  "homepage": "https://github.com/tsurkanovm/multiparser.git",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Mihail Tsurkanov",
+      "email": "tsurkanovm@gmail.com",
+      "homepage": "http://samoinvestor.ru",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "yiisoft/yii2": "*",
+    "artweb/multiparser": "0.5.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "yii\\multiparser\\": ""
+    }
+  }
+}
