@@ -1,4 +1,5 @@
 {
+  "minimum-stability" : "dev",
   "name": "artweb/yii-multiparser",
   "type": "library",
   "description": "This extension provides a Multiparser solution for Yii framework 2.0.",
