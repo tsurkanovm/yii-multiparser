@@ -10,13 +10,17 @@
     {
       "name": "Mihail Tsurkanov",
       "email": "tsurkanovm@gmail.com",
-      "homepage": "http://samoinvestor.ru",
       "role": "Developer"
     }
   ],
   "require": {
     "yiisoft/yii2": "*",
-    "artweb/multiparser": "*"
+    "artweb/multiparser": "0.1"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "0.1.x-dev"
+    }
   },
   "autoload": {
     "psr-4": {
