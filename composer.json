@@ -18,7 +18,7 @@
   },
   "autoload": {
     "psr-4": {
-      "yii\\multiparser\\": "artweb\\yii2-multiparser\\lib\\"
+      "yii\\multiparser\\": "lib\\"
     }
   }
 }
