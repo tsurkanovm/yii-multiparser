@@ -3,7 +3,7 @@ return
     [
         'csv' =>
             ['web' =>
-                ['class' => 'artweb\yii_multiparser\CsvParser',
+                ['class' => 'yii\multiparser\CsvParser',
                     'auto_detect_first_line' => true,
                     'converter_conf' => [
                     "float" => 'PRICE',

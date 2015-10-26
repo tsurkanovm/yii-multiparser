@@ -6,7 +6,7 @@
  * Time: 15:44
  */
 
-namespace artweb\yii_multiparser;
+namespace yii\multiparser;
 
 
 use common\components\CustomVarDamp;
@@ -14,7 +14,7 @@ use common\components\CustomVarDamp;
 
 /**
  * Class XlsxParser
- * @package artweb\yii_multiparser
+ * @package yii\multiparser
  */
 class XlsxParser extends TableParser {
 

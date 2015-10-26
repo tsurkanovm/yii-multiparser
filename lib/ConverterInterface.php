@@ -6,7 +6,7 @@
  * Time: 13:38
  */
 
-namespace artweb\yii_multiparser;
+namespace yii\multiparser;
 
 
 interface ConverterInterface {

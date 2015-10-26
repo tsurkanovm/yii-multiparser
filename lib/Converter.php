@@ -6,7 +6,7 @@
  * Time: 12:50
  */
 
-namespace artweb\yii_multiparser;
+namespace yii\multiparser;
 
 // класс который содержит преобразователи значений (фильтры) используемые при парсинге
 class Converter implements ConverterInterface

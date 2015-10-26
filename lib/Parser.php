@@ -6,7 +6,7 @@
  * Time: 18:25
  */
 
-namespace artweb\yii_multiparser;
+namespace yii\multiparser;
 
 //@todo - заменить read на parse
 //@todo - xml - убрать из названий функций xml и array - это и так понятно

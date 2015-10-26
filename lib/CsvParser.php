@@ -2,13 +2,13 @@
 /**
 
  */
-namespace artweb\yii_multiparser;
+namespace yii\multiparser;
 use common\components\CustomVarDamp;
 
 
 /**
  * Class CsvParser
- * @package artweb\yii_multiparser
+ * @package yii\multiparser
  * @todo - перевести на анг. яз.
  */
 class CsvParser extends TableParser

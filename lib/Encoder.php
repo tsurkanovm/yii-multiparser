@@ -6,7 +6,7 @@
  * Time: 13:36
  */
 
-namespace artweb\yii_multiparser;
+namespace yii\multiparser;
 
 // @todo add comments
 class Encoder

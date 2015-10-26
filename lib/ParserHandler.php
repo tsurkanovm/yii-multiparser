@@ -1,6 +1,6 @@
 <?php
 
-namespace artweb\yii_multiparser;
+namespace yii\multiparser;
 
 use common\components\CustomVarDamp;
 

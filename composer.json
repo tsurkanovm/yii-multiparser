@@ -1,9 +1,9 @@
 {
   "minimum-stability" : "dev",
-  "name": "artweb/yii-multiparser",
+  "name": "artweb/yii2-multiparser",
   "type": "library",
   "description": "This extension provides a Multiparser solution for Yii framework 2.0.",
-  "keywords": [ "yii", "parser", "csv", "xml" ],
+  "keywords": [ "yii2", "parser", "csv", "xml, xlsx" ],
   "homepage": "https://github.com/tsurkanovm/yii-multiparser.git",
   "license": "MIT",
   "authors": [
@@ -18,7 +18,7 @@
   },
   "autoload": {
     "psr-4": {
-      "artweb\\yii_multiparser\\": ""
+      "artweb\\yii2-multiparser\\lib": ""
     }
   }
 }

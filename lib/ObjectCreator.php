@@ -6,7 +6,7 @@
  * Time: 16:24
  */
 
-namespace artweb\yii_multiparser;
+namespace yii\multiparser;
 
 
 use common\components\CustomVarDamp;
