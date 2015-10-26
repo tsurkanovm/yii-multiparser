@@ -6,7 +6,7 @@
  * Time: 14:50
  */
 
-namespace yii\multiparser;
+namespace artweb\yii_multiparser;
 
 use yii\base\DynamicModel;
 use yii\grid\GridView;

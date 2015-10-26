@@ -6,7 +6,7 @@
  * Time: 15:56
  */
 
-namespace yii\multiparser;
+namespace artweb\yii_multiparser;
 
 use common\components\CustomVarDamp;
 use yii\base\Component;
@@ -17,27 +17,29 @@ use yii\base\Component;
 class YiiMultiparser extends Component{
 
 public $configuration;
+public $parserHandler;
 
-    public function getConfiguration($extension, $conf_parameter){
-
-        if (!isset( $this->configuration[$extension] )){
-            throw new \ErrorException( "Parser do not maintain file with extension  {$extension}");
-        }
-        if (!isset( $this->configuration[$extension][$conf_parameter] )){
-            throw new \ErrorException( "Parser configurator do not have settings for {$conf_parameter} parameter");
-        }
-
-        return $this->configuration[$extension][$conf_parameter];
+    public function init()
+    {
+        parent::init();
+        $this->parserHandler = new YiiParserHandler( );
+        $this->parserHandler->setConfiguration( $this->configuration );
 
     }
 
 
     public function parse( $filePath, $options = [] ){
 
-        $parser = new YiiParserHandler( $filePath, $options );
-        return $parser->run();
+        $this->parserHandler->setup( $filePath, $options );
+
+        return $this->parserHandler->run();
 
     }
 
+    public function getConfiguration( $extension, $parameter ){
+
+        return $this->parserHandler->getCustomConfiguration( $extension, $parameter );
+
+    }
 
 }
