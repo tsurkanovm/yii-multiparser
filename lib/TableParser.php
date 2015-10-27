@@ -53,6 +53,8 @@ abstract class TableParser extends Parser {
 
     protected abstract function readRow();
 
+    protected abstract function setResult();
+
 
     public function read()
     {
@@ -66,15 +68,15 @@ abstract class TableParser extends Parser {
             // прочтем строку из файла
             $this->readRow();
 
-            if ( $this->isEmptyRow() ) {
-                //счетчик пустых строк
-                $empty_lines++;
-                continue;
-            }
-
             // уберем пустые колонки из ряда
             $this->filterRow();
 
+            if ( $this->isEmptyRow() ) {
+                //счетчик пустых строк
+                //CustomVarDamp::dump($this->current_row_number);
+                $empty_lines++;
+                continue;
+            }
 
             $this->adjustRowToSettings(  );
 
@@ -82,7 +84,10 @@ abstract class TableParser extends Parser {
             $this->current_row_number++;
 
             // для первой строки утановим ключи из заголовка
-            $this->setKeysFromHeader();
+            if ( !$this->setKeysFromHeader() ) {
+                $this->setResult();
+            }
+
 
             // если у нас установлен лимит, при  его достижении прекращаем парсинг
             if ( $this->isLastLine() )
@@ -91,8 +96,7 @@ abstract class TableParser extends Parser {
             // обнуляем счетчик, так как считаюся пустые строки ПОДРЯД
             $empty_lines = 0;
 
-            $this->result[] = $this->row;
-            $this->row = [];
+
 
         }
 
@@ -129,7 +133,7 @@ abstract class TableParser extends Parser {
             if ( $this->keys !== NULL ) {
 
                 if (count($this->keys) !== count($this->row)) {
-                    throw new \Exception("Ошибка парсинга файла в строке # {$this->current_row_number}. Не соответсвие числа ключевых колонок (заголовка) - числу колонок с данными", 0, 1, $this->file->getBasename(), $this->current_row_number);
+                    throw new \Exception("Ошибка парсинга файла в строке # {$this->current_row_number}. Не соответсвие числа ключевых колонок (заголовка) - числу колонок с данными");
                 }
 
                 $this->row = array_combine($this->keys, $this->row);
@@ -152,14 +156,22 @@ abstract class TableParser extends Parser {
             // в файле есть заголовок, но он еще не назначен - назначим
             if ($this->keys === NULL) {
                 $this->keys = array_values( $this->row );
+                return true;
             }
         }
+        return false;
     }
 
     protected  function filterRow(){
+        // если есть заголовок или ключи - все значения нужны, не фильтруем
+        if ( $this->has_header_row || $this->keys !== NULL ) {
+            return;
+        }
+       // CustomVarDamp::dump( $this->row);
         $this->row = array_filter( $this->row, function($val){
             return !$this->isEmptyColumn($val);
         });
+        //CustomVarDamp::dump( $this->row);
     }
 
     protected  function isLastLine(){

@@ -72,4 +72,8 @@ class CsvParser extends TableParser
     protected  function isEmptyColumn( $val ){
         return $val == '';
     }
+
+    protected  function setResult(  ){
+        $this->result[] = $this->row;
+    }
 }
