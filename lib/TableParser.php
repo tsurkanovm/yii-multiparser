@@ -9,8 +9,6 @@
 namespace yii\multiparser;
 
 
-use common\components\CustomVarDamp;
-
 abstract class TableParser extends Parser {
 
 

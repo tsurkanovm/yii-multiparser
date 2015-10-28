@@ -3,8 +3,6 @@
 
  */
 namespace yii\multiparser;
-use common\components\CustomVarDamp;
-
 
 /**
  * Class CsvParser
@@ -71,9 +69,5 @@ class CsvParser extends TableParser
 
     protected  function isEmptyColumn( $val ){
         return $val == '';
-    }
-
-    protected  function setResult(  ){
-        $this->result[] = $this->row;
     }
 }

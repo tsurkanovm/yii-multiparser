@@ -9,9 +9,6 @@
 namespace yii\multiparser;
 
 
-use common\components\CustomVarDamp;
-use common\components\CustomArrayHelper;
-
 class XmlParser extends  Parser{
 
     public $node;

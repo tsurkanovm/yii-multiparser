@@ -8,7 +8,6 @@
 
 namespace yii\multiparser;
 
-use common\components\CustomVarDamp;
 use yii\base\Component;
 
 

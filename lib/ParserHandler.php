@@ -2,7 +2,6 @@
 
 namespace yii\multiparser;
 
-use common\components\CustomVarDamp;
 
 class ParserHandler
 {

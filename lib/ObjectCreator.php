@@ -9,8 +9,6 @@
 namespace yii\multiparser;
 
 
-use common\components\CustomVarDamp;
-
 class ObjectCreator {
     public static function build( array $configuration ){
         if ( isset( $configuration['class'] ) ) {

@@ -12,8 +12,6 @@ namespace yii\multiparser;
 //@todo - xml - убрать из названий функций xml и array - это и так понятно
 
 
-use common\components\CustomVarDamp;
-
 abstract class Parser
 {
     public $converter_conf  = [];

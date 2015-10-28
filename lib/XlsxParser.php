@@ -9,7 +9,6 @@
 namespace yii\multiparser;
 
 
-use common\components\CustomVarDamp;
 
 
 /**
@@ -49,53 +48,34 @@ class XlsxParser extends TableParser {
 
     public function read()
     {
-        $this->extractFiles();
 
+        $this->extractFiles();
         $this->readSheets();
         $this->readStrings();
 
         foreach ( $this->sheets_arr  as $sheet ) {
             //проходим по всем файлам из директории /xl/worksheets/
-            $this->current_sheet = $sheet;
+
             $sheet_path = $this->path_for_extract_files . '/xl/worksheets/' . $sheet . '.xml';
             if ( file_exists( $sheet_path ) && is_readable( $sheet_path ) ) {
 
                 $xml = simplexml_load_file( $sheet_path, "SimpleXMLIterator" );
                 $this->current_node = $xml->sheetData->row;
                 $this->current_node->rewind();
-                if ( $this->current_node->valid() ) {
 
-                    parent::read();
-
-                }
+                parent::read();
 
             }
 
         }
-
-
-        if ( $this->active_sheet ) {
-
-            // в настройках указан конкретный лист с которогшо будем производить чтение, поэтому и возвращаем подмассив
-            return $this->result[ $this->current_sheet ];
-        }else{
-            return $this->result;
-        }
-
+       return $this->$result;
     }
 
     protected function extractFiles ()
     {
-        $this->path_for_extract_files = $this->path_for_extract_files . session_id();
-        if ( !mkdir($this->path_for_extract_files) )
-        {
-            throw new \Exception( 'Ошибка создания временного каталога - ' . $this->path_for_extract_files );
-            }
-
-
         $zip = new \ZipArchive;
         if ( $zip->open( $this->file->getPathname() ) === TRUE ) {
-            $zip->extractTo( $this->path_for_extract_files . '/' );
+            $zip->extractTo( $this->path_for_extract_files );
             $zip->close();
         } else {
             throw new \Exception( 'Ошибка чтения xlsx файла' );
@@ -105,7 +85,7 @@ class XlsxParser extends TableParser {
     protected function readSheets ()
     {
         if ( $this->active_sheet ) {
-            $this->sheets_arr[ ] = 'Sheet' . $this->active_sheet;
+            $this->sheets_arr[ $this->active_sheet ] = 'Sheet' . $this->active_sheet;
             return;
         }
 
@@ -138,18 +118,11 @@ class XlsxParser extends TableParser {
     }
 
 
-
-   // protected function readRow ( $item, $sheet , $current_row )
     protected function readRow ( )
     {
-        $this->row = [];
         $node = $this->current_node->getChildren();
-        if ($node === NULL) {
-            return;
-        }
-        //foreach ( $node as $child ) {
-        for ( $node->rewind(); $node->valid(); $node->next() ) {
-            $child = $node->current();
+
+        foreach ( $node as $child ) {
             $attr = $child->attributes();
 
             if( isset($child->v) ) {
@@ -166,20 +139,12 @@ class XlsxParser extends TableParser {
             }
 
         }
-        // дополним ряд пустыми значениями если у нас ключей больше чем значений
-        if ( $this->has_header_row && ( count( $this->keys ) > count( $this->row ) ) ) {
-            $extra_coloumn = count( $this->keys ) - count( $this->row );
-            for ( $i = 1; $i <= $extra_coloumn; $i++ ) {
-                $this->row[] =  '';
-            }
-        }
         $this->current_node->next();
     }
 
     protected  function isEmptyRow(){
 
         $is_empty = false;
-       // CustomVarDamp::dump(count( $this->row ), $this->current_row_number);
 
         if ( !count( $this->row ) || !$this->current_node->valid() ) {
             return true;
@@ -188,7 +153,7 @@ class XlsxParser extends TableParser {
         $j = 0;
         for ($i = 1; $i <= count( $this->row ); $i++) {
 
-            if ( $this->isEmptyColumn( $this->row[$i - 1] ) ) {
+            if ( isset($this->row[$i - 1]) && $this->isEmptyColumn( $this->row[$i - 1] ) ) {
                 $j++;
             }
 
@@ -204,37 +169,4 @@ class XlsxParser extends TableParser {
     protected  function isEmptyColumn( $val ){
         return $val == '';
     }
-
-    protected  function setResult(  ){
-        $this->result[ $this->current_sheet ][] = $this->row;
-    }
-
-    protected function deleteExtractFiles ()
-    {
-            $this->removeDir( $this->path_for_extract_files );
-
-    }
-
-    protected function removeDir($dir) {
-        if (is_dir($dir)) {
-            $objects = scandir($dir);
-            foreach ($objects as $object) {
-                if ($object != "." && $object != "..") {
-                    if (filetype($dir."/".$object) == "dir")
-                        $this->removeDir($dir."/".$object);
-                    else
-                        unlink($dir."/".$object);
-                }
-            }
-            reset($objects);
-            rmdir($dir);
-        }
-    }
-
-    function __destruct()
-    {
-        $this->deleteExtractFiles();
-    }
-
-
 }
