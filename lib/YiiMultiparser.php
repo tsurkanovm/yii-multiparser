@@ -17,6 +17,7 @@ class YiiMultiparser extends Component{
 
 public $configuration;
 public $parserHandler;
+public $filePath;
 
     public function init()
     {
@@ -29,6 +30,7 @@ public $parserHandler;
 
     public function parse( $filePath, $options = [] ){
 
+        $this->filePath = $filePath;
         $this->parserHandler->setup( $filePath, $options );
 
         return $this->parserHandler->run();

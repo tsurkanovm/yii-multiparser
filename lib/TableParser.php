@@ -94,10 +94,7 @@ abstract class TableParser extends Parser {
             // обнуляем счетчик, так как считаюся пустые строки ПОДРЯД
             $empty_lines = 0;
 
-
-
         }
-
 
     }
     /**
@@ -131,7 +128,8 @@ abstract class TableParser extends Parser {
             if ( $this->keys !== NULL ) {
 
                 if (count($this->keys) !== count($this->row)) {
-                    throw new \Exception("Ошибка парсинга файла в строке # {$this->current_row_number}. Не соответсвие числа ключевых колонок (заголовка) - числу колонок с данными");
+                    throw new \Exception("Ошибка парсинга файла в строке # {$this->current_row_number}.
+                    Не соответсвие числа ключевых колонок (заголовка) - числу колонок с данными");
                 }
 
                 $this->row = array_combine($this->keys, $this->row);
@@ -161,15 +159,13 @@ abstract class TableParser extends Parser {
     }
 
     protected  function filterRow(){
-        // если есть заголовок или ключи - все значения нужны, не фильтруем
-        if ( $this->has_header_row || $this->keys !== NULL ) {
+        // если есть заголовок - все значения нужны, не фильтруем
+        if ( $this->has_header_row || $this->row === NULL ) {
             return;
         }
-       // CustomVarDamp::dump( $this->row);
         $this->row = array_filter( $this->row, function($val){
             return !$this->isEmptyColumn($val);
         });
-        //CustomVarDamp::dump( $this->row);
     }
 
     protected  function isLastLine(){

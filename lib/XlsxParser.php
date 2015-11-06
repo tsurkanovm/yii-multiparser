@@ -62,18 +62,13 @@ class XlsxParser extends TableParser {
                 $this->current_node = $xml->sheetData->row;
                 $this->current_node->rewind();
                 if ( $this->current_node->valid() ) {
-
                     parent::read();
-
                 }
-
             }
-
         }
 
-
+        $this->cleanUp();
         if ( $this->active_sheet ) {
-
             // в настройках указан конкретный лист с которогшо будем производить чтение, поэтому и возвращаем подмассив
             return $this->result[ $this->current_sheet ];
         }else{
@@ -89,7 +84,6 @@ class XlsxParser extends TableParser {
         {
             throw new \Exception( 'Ошибка создания временного каталога - ' . $this->path_for_extract_files );
             }
-
 
         $zip = new \ZipArchive;
         if ( $zip->open( $this->file->getPathname() ) === TRUE ) {
@@ -226,9 +220,16 @@ class XlsxParser extends TableParser {
         }
     }
 
-    function __destruct()
+
+    protected function cleanUp()
     {
+        parent::cleanUp();
+        unset($this->strings_arr);
+        unset($this->sheets_arr);
+        unset($this->current_node);
+
         $this->deleteExtractFiles();
+
     }
 
 

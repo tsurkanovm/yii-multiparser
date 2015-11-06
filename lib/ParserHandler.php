@@ -60,24 +60,12 @@ class ParserHandler
 
     public function run()
     {
-        $result = [];
-        if (count($this->custom_configuration)) {
+        $parser = $this->createObjectByConfiguration( $this->custom_configuration );
 
-            $parser = $this->createObjectByConfiguration($this->custom_configuration);
+        $parser->setup();
+        $result = $parser->read();
 
-            try {
-
-                $parser->setup();
-                $result = $parser->read();
-
-            } catch (\ErrorException $e) {
-
-                echo $e->getMessage();
-
-            }
-
-        }
-
+        unset($this->fileObject);
         return $result;
     }
 
@@ -106,6 +94,10 @@ class ParserHandler
     {
         return ObjectCreator::build($configuration);
     }
+
+
+
+
 }
 
 

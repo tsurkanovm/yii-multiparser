@@ -24,16 +24,17 @@ class XmlParser extends  Parser{
 
         }
 
+        $this->cleanUp();
         return $result;
     }
 
 
     /**
      * Converts an XML string to a PHP array
-     *
-     * @uses recursiveXMLToArray()
-     * @param string $file_path
-     * @return array
+     * @param $file_path
+     * @return mixed
+     * @throws Exception
+     * @throws \Exception
      */
     protected function xmlToArray( $file_path ) {
 

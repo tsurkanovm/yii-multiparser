@@ -34,6 +34,8 @@ class CsvParser extends TableParser
     {
         parent::read();
 
+        $this->cleanUp();
+
         return $this->result;
     }
 
@@ -54,6 +56,10 @@ class CsvParser extends TableParser
         $j = 0;
         for ($i = 1; $i <= count( $this->row ); $i++) {
 
+            if ( !isset( $this->row[ $i - 1 ] ) ) {
+                continue;
+            }
+
             if ( $this->isEmptyColumn( $this->row[$i - 1] ) ) {
                 $j++;
             }
@@ -69,5 +75,9 @@ class CsvParser extends TableParser
 
     protected  function isEmptyColumn( $val ){
         return $val == '';
+    }
+
+    protected  function setResult(  ){
+        $this->result[] = $this->row;
     }
 }
