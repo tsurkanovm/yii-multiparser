@@ -12,13 +12,17 @@ namespace yii\multiparser;
 //@todo - xml - убрать из названий функций xml и array - это и так понятно
 
 
+use common\components\CustomVarDamp;
+
 abstract class Parser
 {
     public $converter_conf  = [];
     protected $converter = NULL;
 
-    /** @var экземляр SplFileObject читаемого файла */
+    /** @var file-resource читаемого файла */
     public $file;
+    /** @var string путь читаемого файла */
+    public $file_path;
 
     /**
      * @var array - результирующий массив с отпарсенными значениями
@@ -90,9 +94,11 @@ abstract class Parser
 
     protected function cleanUp(  )
     {
+
         unset( $this->file );
         unset( $this->converter );
         unset( $this->converter_conf );
+
 
     }
 

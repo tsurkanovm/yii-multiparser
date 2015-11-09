@@ -15,8 +15,8 @@ class XmlParser extends  Parser{
 
     public function read()
     {
-        $file = $this->file;
-        $result = $this->xmlToArray( $file->getPathname() );
+        //$file = $this->file;
+        $result = $this->xmlToArray( );
 
         if ( isset($this->node) ) {
 
@@ -36,13 +36,13 @@ class XmlParser extends  Parser{
      * @throws Exception
      * @throws \Exception
      */
-    protected function xmlToArray( $file_path ) {
+    protected function xmlToArray( ) {
 
         try {
-            $xml = new \SimpleXMLElement( $file_path, 0, true );
+            $xml = new \SimpleXMLElement( $this->file_path, 0, true );
             //\common\components\CustomVarDamp::dumpAndDie($xml->children()->children());
             $result = $this->recursiveXMLToArray( $xml );
-        } catch(Exception $ex) {
+        } catch(\Exception $ex) {
 
             throw $ex;
         }

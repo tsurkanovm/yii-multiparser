@@ -160,7 +160,7 @@ abstract class TableParser extends Parser {
 
     protected  function filterRow(){
         // если есть заголовок - все значения нужны, не фильтруем
-        if ( $this->has_header_row || $this->row === NULL ) {
+        if ( $this->has_header_row || !is_array( $this->row ) ) {
             return;
         }
         $this->row = array_filter( $this->row, function($val){

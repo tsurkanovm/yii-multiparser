@@ -18,9 +18,9 @@ class YiiParserHandler extends ParserHandler{
      * @param array $options
      * проверяет читабельность переданного файла, а также наличие настроек парсера в конфигурационном файле для данного типа файла
      */
-//    public function setup($filePath,  $options = [])
+//    public function setup($file_path,  $options = [])
 //    {
-//        $this->filePath = $filePath;
+//        $this->file_path = $file_path;
 //        if (isset($options['mode'])) {
 //
 //            $this->mode = $options['mode'];
@@ -35,10 +35,10 @@ class YiiParserHandler extends ParserHandler{
 //        $this->options = $options;
 //
 //        try {
-//            $this->fileObject = new \SplFileObject($this->filePath, 'r');
+//            $this->fileObject = new \SplFileObject($this->file_path, 'r');
 //        } catch (\ErrorException $e) {
-//            //  Yii::warning("Ошибка открытия файла {$this->filePath}");
-//            echo "Ошибка открытия файла {$this->filePath}";
+//            //  Yii::warning("Ошибка открытия файла {$this->file_path}");
+//            echo "Ошибка открытия файла {$this->file_path}";
 //            return [];
 //        }
 //

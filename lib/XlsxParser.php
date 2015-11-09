@@ -86,12 +86,13 @@ class XlsxParser extends TableParser {
             }
 
         $zip = new \ZipArchive;
-        if ( $zip->open( $this->file->getPathname() ) === TRUE ) {
+        if ( $zip->open( $this->file_path ) === TRUE ) {
             $zip->extractTo( $this->path_for_extract_files . '/' );
             $zip->close();
         } else {
             throw new \Exception( 'Ошибка чтения xlsx файла' );
         }
+        unset($zip);
     }
 
     protected function readSheets ()

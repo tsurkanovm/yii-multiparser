@@ -3,24 +3,25 @@
 namespace yii\multiparser;
 
 
+use common\components\CustomVarDamp;
+
 class ParserHandler
 {
     //@todo - добавить комменты на анг язе (ошибки выкидывать тоже на англ яз.)
     //@todo - сделать универсальную обработку ошибок
     //@todo - возможно отказаться от YiiParserHandler
     const DEFAULT_MODE = 'web';
-    /** @var string */
-    protected $filePath;
+
 
     /** @var string */
     protected $configuration = [];
     /** @var string */
     protected $custom_configuration = [];
 
-    /** @var instance of SplFileObject */
-    protected $fileObject;
+    /** @var file handle */
+    protected $file;
 
-    /** @var string - extension of file $filePath */
+    /** @var string - extension of file $file_path */
     protected $extension;
 
     /** @var string - */
@@ -32,9 +33,9 @@ class ParserHandler
     /**
      * @param string first line in file for parsing
      */
-    public function setup($filePath, $options = [])
+    public function setup($file_path, $options = [])
     {
-        $this->filePath = $filePath;
+       //$this->file_path = $file_path;
         if (isset($options['mode'])) {
 
             $this->mode = $options['mode'];
@@ -47,12 +48,10 @@ class ParserHandler
         }
 
         $this->options = $options;
-
-        $this->fileObject = new \SplFileObject($this->filePath, 'r');
-
-        $options['file'] = $this->fileObject;
-        $this->extension = $this->fileObject->getExtension();
-
+        $this->file = fopen($file_path, 'r');
+        $options['file'] = $this->file;
+        $options['file_path'] = $file_path;
+        $this->extension = pathinfo( $file_path, PATHINFO_EXTENSION );
         $this->custom_configuration = $this->getCustomConfiguration($this->extension, $this->mode);
         $this->custom_configuration = array_merge_recursive($this->custom_configuration, $options);
 
@@ -65,7 +64,9 @@ class ParserHandler
         $parser->setup();
         $result = $parser->read();
 
-        unset($this->fileObject);
+        unset($parser);
+        fclose( $this->file );
+
         return $result;
     }
 

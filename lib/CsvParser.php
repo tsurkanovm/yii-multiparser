@@ -22,9 +22,9 @@ class CsvParser extends TableParser
     public function setup()
     {
 
-        $this->file->setCsvControl($this->delimiter);
-        $this->file->setFlags(\SplFileObject::READ_CSV);
-        $this->file->setFlags(\SplFileObject::SKIP_EMPTY);
+//        $this->file->setCsvControl($this->delimiter);
+//        $this->file->setFlags(\SplFileObject::READ_CSV);
+//        $this->file->setFlags(\SplFileObject::SKIP_EMPTY);
 
         parent::setup();
 
@@ -42,7 +42,7 @@ class CsvParser extends TableParser
 
     protected function readRow(  )
     {
-        $this->row = $this->file->fgetcsv();
+        $this->row = fgetcsv( $this->file, 0, $this->delimiter );
     }
 
     protected  function isEmptyRow(){
