@@ -7,7 +7,7 @@
  */
 
 namespace yii\multiparser;
-
+use common\components\CustomVarDamp;
 
 
 /**
@@ -47,17 +47,14 @@ class XlsxParser extends TableParser {
 
     public function read()
     {
-        $this->extractFiles();
-
+       $this->extractFiles();
         $this->readSheets();
         $this->readStrings();
-
         foreach ( $this->sheets_arr  as $sheet ) {
             //проходим по всем файлам из директории /xl/worksheets/
             $this->current_sheet = $sheet;
             $sheet_path = $this->path_for_extract_files . '/xl/worksheets/' . $sheet . '.xml';
             if ( file_exists( $sheet_path ) && is_readable( $sheet_path ) ) {
-
                 $xml = simplexml_load_file( $sheet_path, "SimpleXMLIterator" );
                 $this->current_node = $xml->sheetData->row;
                 $this->current_node->rewind();
@@ -68,8 +65,9 @@ class XlsxParser extends TableParser {
         }
 
         $this->cleanUp();
+
         if ( $this->active_sheet ) {
-            // в настройках указан конкретный лист с которогшо будем производить чтение, поэтому и возвращаем подмассив
+            // в настройках указан конкретный лист с которого будем производить чтение, поэтому и возвращаем подмассив
             return $this->result[ $this->current_sheet ];
         }else{
             return $this->result;
@@ -80,16 +78,19 @@ class XlsxParser extends TableParser {
     protected function extractFiles ()
     {
         $this->path_for_extract_files = $this->path_for_extract_files . session_id();
-        if ( !mkdir($this->path_for_extract_files) )
-        {
-            throw new \Exception( 'Ошибка создания временного каталога - ' . $this->path_for_extract_files );
+        if ( !file_exists($this->path_for_extract_files )) {
+            if ( !mkdir( $this->path_for_extract_files ) )
+            {
+                throw new \Exception( 'Ошибка создания временного каталога - ' . $this->path_for_extract_files );
             }
+        }
 
         $zip = new \ZipArchive;
         if ( $zip->open( $this->file_path ) === TRUE ) {
             $zip->extractTo( $this->path_for_extract_files . '/' );
             $zip->close();
         } else {
+
             throw new \Exception( 'Ошибка чтения xlsx файла' );
         }
         unset($zip);
@@ -98,7 +99,7 @@ class XlsxParser extends TableParser {
     protected function readSheets ()
     {
         if ( $this->active_sheet ) {
-            $this->sheets_arr[ ] = 'Sheet' . $this->active_sheet;
+            $this->sheets_arr[ ] = 'sheet' . $this->active_sheet;
             return;
         }
 

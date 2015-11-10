@@ -9,13 +9,15 @@
 namespace yii\multiparser;
 
 // класс который содержит преобразователи значений (фильтры) используемые при парсинге
+use common\components\CustomVarDamp;
+
 class Converter implements ConverterInterface
 {
 
     const METHOD_PREFIX = 'convertTo';
 
     //public  $configuration = [];
-
+    
     public static function convertToFloat($value)
     {
         if ($value == '') {
@@ -87,7 +89,6 @@ class Converter implements ConverterInterface
     public static function __callStatic($name, $value)
     {
         $method_name = self::METHOD_PREFIX . $name;
-
         if (method_exists(static::class, $method_name)) {
             return static::$method_name($value[0]);
 
