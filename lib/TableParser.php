@@ -9,6 +9,8 @@
 namespace yii\multiparser;
 
 
+use common\components\CustomVarDamp;
+
 abstract class TableParser extends Parser {
 
 
@@ -107,7 +109,7 @@ abstract class TableParser extends Parser {
     {
         do  {
 
-            $this->current_row_number ++;
+            $this->current_row_number++;
             $this->readRow();
 
         } while( $this->isEmptyRow() );
