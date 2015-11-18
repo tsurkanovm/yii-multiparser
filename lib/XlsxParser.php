@@ -36,6 +36,10 @@ class XlsxParser extends TableParser
     protected $current_node;
     protected $current_sheet;
 
+    // глубина округления для флоата
+    // @todo - перенести вродительский класс и применить в дочерних классах
+    protected $float_precision = 6;
+
     public function setup()
     {
 
@@ -164,9 +168,13 @@ class XlsxParser extends TableParser
             if (isset($child->v)) {
                 $value = (string)$child->v;
 
-                if ( isset($attr['t']) )
-                // it's not a value it's a string, so fetch it from string array
+                if ( isset($attr['t']) ){
+                    // it's not a value it's a string, so fetch it from string array
                     $value = $this->strings_arr[$value];
+                } else {
+                    $value = (string)round( $value, $this->float_precision );
+                }
+
 
             } else {
                 $value = '';
