@@ -21,11 +21,6 @@ class CsvParser extends TableParser
      */
     public function setup()
     {
-
-//        $this->file->setCsvControl($this->delimiter);
-//        $this->file->setFlags(\SplFileObject::READ_CSV);
-//        $this->file->setFlags(\SplFileObject::SKIP_EMPTY);
-
         parent::setup();
 
     }

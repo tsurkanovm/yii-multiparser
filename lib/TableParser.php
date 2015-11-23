@@ -68,15 +68,15 @@ abstract class TableParser extends Parser {
             // прочтем строку из файла
             $this->readRow();
 
-            // уберем пустые колонки из ряда
-            $this->filterRow();
-
             if ( $this->isEmptyRow() ) {
                 //счетчик пустых строк
                 //CustomVarDamp::dump($this->current_row_number);
                 $empty_lines++;
                 continue;
             }
+
+            // уберем пустые колонки из ряда
+            $this->filterRow();
 
             $this->adjustRowToSettings(  );
 

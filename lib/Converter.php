@@ -9,7 +9,7 @@
 namespace yii\multiparser;
 
 // класс который содержит преобразователи значений (фильтры) используемые при парсинге
-use common\components\CustomVarDamp;
+
 
 class Converter implements ConverterInterface
 {
