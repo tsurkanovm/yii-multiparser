@@ -1,6 +1,6 @@
 {
   "minimum-stability" : "dev",
-  "name": "artweb/yii2-multiparser",
+  "name": "tsum/yii2-multiparser",
   "type": "library",
   "description": "This extension provides a Multiparser solution for Yii framework 2.0.",
   "keywords": [ "yii2", "parser", "csv", "xml", "xlsx" ],
