@@ -37,7 +37,7 @@ class XlsxParser extends TableParser
     protected $current_sheet;
 
     // глубина округления для флоата
-    // @todo - перенести вродительский класс и применить в дочерних классах
+    // @todo - перенести в родительский класс и применить в дочерних классах
     protected $float_precision = 6;
 
     public function setup()
@@ -208,7 +208,7 @@ class XlsxParser extends TableParser
 
         $is_empty = false;
 
-        if (!count($this->row) || !$this->current_node->valid()) {
+        if (!count($this->row)) {
             return true;
         }
 
@@ -230,7 +230,7 @@ class XlsxParser extends TableParser
 
     protected function isEmptyColumn($val)
     {
-        return $val == '';
+        return $val == '' || $val === null;
     }
 
     protected function setResult()

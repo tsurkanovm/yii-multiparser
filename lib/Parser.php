@@ -92,6 +92,11 @@ abstract class Parser
 
     }
 
+    public final static function supportedExtension()
+    {
+        return ['csv','xml','xlsx','txt'];
+    }
+
     protected function cleanUp(  )
     {
 

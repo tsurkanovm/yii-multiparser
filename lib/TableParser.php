@@ -9,6 +9,8 @@
 namespace yii\multiparser;
 
 
+use common\components\CustomVarDamp;
+
 abstract class TableParser extends Parser
 {
 
@@ -69,8 +71,8 @@ abstract class TableParser extends Parser
 
             if ($this->isEmptyRow()) {
                 //счетчик пустых строк
-                //CustomVarDamp::dump($this->current_row_number);
                 $empty_lines++;
+                $this->current_row_number++;
                 continue;
             }
 
@@ -99,7 +101,6 @@ abstract class TableParser extends Parser
             $empty_lines = 0;
 
         }
-
     }
 
     /**
