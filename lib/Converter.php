@@ -23,12 +23,7 @@ class Converter implements ConverterInterface
         if ($value == '') {
             $value = 0;
         }
-        $value = trim(str_replace(",", ".", $value));
-        $value = preg_replace("/[^0-9.]+/", "", strtoupper($value));
 
-        if ($value == '') {
-            return '';
-        }
         $value = round((float)$value, 2);
 
         return $value;
@@ -39,12 +34,8 @@ class Converter implements ConverterInterface
         if ($value == '') {
             $value = 0;
         }
-        $value = trim(str_replace(",", ".", $value));
-        $value = preg_replace("/[^0-9.]+/", "", strtoupper($value));
-        if ($value == '') {
-            return '';
-        }
-        $value = round((int)$value, 2);
+
+        $value = (int)$value;
 
         return $value;
     }
