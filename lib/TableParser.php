@@ -13,14 +13,19 @@ use common\components\CustomVarDamp;
 
 abstract class TableParser extends Parser
 {
-
-
     /**
      * @var array - текущий отпарсенный ряд
+     *если есть ключи, то колонки с пустыми значениями будут пропускаться (из ряда такие значения будут удаляться),
+     * например если в файле вторая колонка пустая то она будет удалена
+     * в остальных случаях парсятся все колонки (не проверяется - пустая ли колонка) и попадёт в итоговый массив
      */
     protected $row = [];
 
-    /** @var int - первая строка с которой начинать парсить */
+    /** @var int - первая строка с которой начинать парсить
+     * эта строка будет считаться первой значимой строкой
+     * если установлен аттрибут $has_header_row,
+     * тогда следующая строка будет считаться заголовком и будет пропущена
+     */
     public $first_line = 0;
 
     /** @var int - последняя строка до которой  парсить
@@ -32,9 +37,11 @@ abstract class TableParser extends Parser
 
 
     /** @var bool
-    нужно ли искать автоматически первоую значисмую строку (не пустая строка)
-     * иначе первая строка будет взята из аттрибута $first_line */
-    public $auto_detect_first_line = false;
+     * имеет ли файл заголовок в первой значимой строке
+     * true - первая значимая строка будет пропущена
+     */
+    public $has_header_row = true;
+
 
     /** @var int - количество значимых колонок, что бы определить первую значимую строку
      * используется при автоопределении первой строки*/
@@ -48,8 +55,6 @@ abstract class TableParser extends Parser
     protected $current_row_number = 0;
 
 
-    protected abstract function isEmptyRow();
-
     protected abstract function isEmptyColumn($column_value);
 
     protected abstract function readRow();
@@ -59,15 +64,27 @@ abstract class TableParser extends Parser
 
     public function read()
     {
-        if ($this->auto_detect_first_line) {
-            $this->shiftToFirstValuableLine();
-        }
+        // получим первую значимую строку
+        $this->shiftToFirstValuableLine();
+
+        // первый проход, строка прочитана в shiftToFirstValuableLine
+        $first_circle = true;
 
         // будем считать количество пустых строк подряд - при достижении $empty_lines_quantity - считаем что это конец файла и выходим
         $empty_lines = 0;
         while ($empty_lines < $this->empty_lines_quantity) {
-            // прочтем строку из файла
-            $this->readRow();
+
+            // прочтем строку из файла, если это не первый проход
+            if (!$first_circle){
+                $this->readRow();
+            }
+
+            $first_circle = false;
+
+            // уберем пустые колонки из ряда
+            if ($this->keys === NULL) {
+                $this->filterRow();
+            }
 
             if ($this->isEmptyRow()) {
                 //счетчик пустых строк
@@ -76,22 +93,13 @@ abstract class TableParser extends Parser
                 continue;
             }
 
-            // уберем пустые колонки из ряда
-            if ($this->keys === NULL) {
-                $this->filterRow();
-            }
-
-
+            // запустим конвертирование
             $this->adjustRowToSettings();
 
+            // установим отпарсенную строку в итоговый массив результата
+            $this->setResult();
             // строка не пустая, имеем прочитанный массив значений
             $this->current_row_number++;
-
-            // для первой строки утановим ключи из заголовка
-            if (!$this->setKeysFromHeader()) {
-                $this->setResult();
-            }
-
 
             // если у нас установлен лимит, при  его достижении прекращаем парсинг
             if ($this->isLastLine())
@@ -99,29 +107,28 @@ abstract class TableParser extends Parser
 
             // обнуляем счетчик, так как считаюся пустые строки ПОДРЯД
             $empty_lines = 0;
-
         }
     }
 
     /**
      * определяет первую значимую строку,
      * считывается файл пока в нем не встретится строка с непустыми колонками
-     * в количестве указанном в атрибуте min_column_quantity
-     * в результате выполнения $current_row_number будет находится на последней незначимой строке
+     * или пока не дойдет до first_line
+     * пропускает заголовок если он указан
      */
     protected function shiftToFirstValuableLine()
     {
+        // читаем пока не встретим значимую строку, или пока не дойдем до first_line
         do {
-
             $this->current_row_number++;
             $this->readRow();
+        } while ( $this->isEmptyRow() && ( $this->first_line < $this->current_row_number ) );
 
-        } while ($this->isEmptyRow());
-
-        // @todo - сделать опционально
-        // код для того что бы парсить первую строку, закомментировано как предполагается что первая значимая строка это заголовок
-        //       $this->current_row_number --;
-//        $this->file->seek( $this->current_row_number );
+        // если указан заголовок, то его мы тоже пропускаем (читаем далее)
+        if( $this->has_header_row ) {
+            $this->current_row_number++;
+            $this->readRow();
+        }
     }
 
     /**
@@ -129,7 +136,6 @@ abstract class TableParser extends Parser
      */
     protected function adjustRowToSettings()
     {
-
         // если есть заголовок, то перед конвертацией его нужно назначить
         if ($this->keys !== NULL) {
             // adjust row to keys
@@ -150,22 +156,43 @@ abstract class TableParser extends Parser
 
     }
 
-    protected function setKeysFromHeader()
-    {
-        if ($this->has_header_row) {
-            // в файле есть заголовок, но он еще не назначен - назначим
-            if ($this->keys === NULL) {
-                $this->keys = array_values($this->row);
-                return true;
+    protected  function isEmptyRow(){
+
+        $is_empty = false;
+
+        if ( empty( $this->row ) ) {
+            return true;
+        }
+        if (  count( $this->row ) < $this->min_column_quantity ) {
+            return true;
+        }
+
+        $j = 0;
+        for ($i = 1; $i <= count( $this->row ); $i++) {
+
+            if ( !isset( $this->row[ $i - 1 ] ) ) {
+                continue;
+            }
+
+            if ( $this->isEmptyColumn( $this->row[$i - 1] ) ) {
+                $j++;
+            }
+
+            if ( $j >= $this->min_column_quantity ) {
+                $is_empty = true;
+                break;
             }
         }
-        return false;
+
+        return $is_empty;
     }
+
+
 
     protected function filterRow()
     {
-        // если есть заголовок - все значения нужны, не фильтруем
-        if ($this->has_header_row || !is_array($this->row)) {
+        // нет строки - нет фильтрации
+        if ( empty( $this->row ) ) {
             return;
         }
         $this->row = array_filter($this->row, function ($val) {

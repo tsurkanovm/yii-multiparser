@@ -17,7 +17,7 @@ class CsvParser extends TableParser
 
 
     /**
-     * метод устанвливает нужные настройки объекта SplFileObject, для работы с csv
+     * метод устанавливает настройки конвертера
      */
     public function setup()
     {
@@ -40,33 +40,6 @@ class CsvParser extends TableParser
         $this->row = fgetcsv( $this->file, 0, $this->delimiter );
     }
 
-    protected  function isEmptyRow(){
-
-        $is_empty = false;
-
-        if ($this->row === false || $this->row === NULL ) {
-            return true;
-        }
-
-        $j = 0;
-        for ($i = 1; $i <= count( $this->row ); $i++) {
-
-            if ( !isset( $this->row[ $i - 1 ] ) ) {
-                continue;
-            }
-
-            if ( $this->isEmptyColumn( $this->row[$i - 1] ) ) {
-                $j++;
-            }
-
-            if ( $j >= $this->min_column_quantity ) {
-                $is_empty = true;
-                break;
-            }
-        }
-
-        return $is_empty;
-    }
 
     protected  function isEmptyColumn( $val ){
         return $val == '';

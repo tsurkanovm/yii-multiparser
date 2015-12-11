@@ -175,58 +175,17 @@ class XlsxParser extends TableParser
                     $value = (string)round( $value, $this->float_precision );
                 }
 
-
             } else {
                 $value = '';
             }
-
             // set
             $this->row[$i] = $value;
-
         }
-//        // fill the row by empty values for keys that we are missed in previous step
-        // only for 'has_header_row = true' mode
-        if ( $this->has_header_row && $this->keys !== Null  ) {
-            $extra_column = count( $this->keys ) - count( $this->row );
-            if ( $extra_column ) {
-                foreach ( $this->keys as $key => $key ) {
 
-                    if ( isset( $this->row[$key] ) ) {
-                        continue;
-                    }
-                    $this->row[$key] = '';
-                }
-            }
-
-        }
         ksort( $this->row );
         $this->current_node->next();
     }
 
-    protected function isEmptyRow()
-    {
-
-        $is_empty = false;
-
-        if (!count($this->row)) {
-            return true;
-        }
-
-        $j = 0;
-        for ($i = 1; $i <= count($this->row); $i++) {
-
-            if (isset($this->row[$i - 1]) && $this->isEmptyColumn($this->row[$i - 1])) {
-                $j++;
-            }
-
-            if ($j >= $this->min_column_quantity) {
-                $is_empty = true;
-                break;
-            }
-        }
-
-        return $is_empty;
-    }
 
     protected function isEmptyColumn($val)
     {
@@ -261,7 +220,6 @@ class XlsxParser extends TableParser
         }
     }
 
-
     /**
      * @param $cell_address - string with address like A1, B1 ...
      * @return int - integer index
@@ -281,17 +239,7 @@ class XlsxParser extends TableParser
         return $index;
 
     }
-// @todo - переписать родительский метод в универсальной манере а не переопределять его
-    protected  function setKeysFromHeader(){
-        if ( $this->has_header_row ) {
 
-            if ($this->keys === NULL) {
-                $this->keys =  $this->row;
-                return true;
-            }
-        }
-        return false;
-    }
     protected function cleanUp()
     {
         parent::cleanUp();

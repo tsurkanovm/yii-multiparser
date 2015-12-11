@@ -15,15 +15,13 @@ class XmlParser extends  Parser{
 
     public function read()
     {
-        //$file = $this->file;
-        $result = $this->xmlToArray( );
+        $result = $this->parseToArray( );
 
         if ( isset($this->node) ) {
 
             $result = $result[ $this->node ];
 
         }
-
         $this->cleanUp();
         return $result;
     }
@@ -36,17 +34,15 @@ class XmlParser extends  Parser{
      * @throws Exception
      * @throws \Exception
      */
-    protected function xmlToArray( ) {
-
+    protected function parseToArray( ) {
         try {
             $xml = new \SimpleXMLElement( $this->file_path, 0, true );
             //\common\components\CustomVarDamp::dumpAndDie($xml->children()->children());
-            $result = $this->recursiveXMLToArray( $xml );
+            $result = $this->recursiveParseToArray( $xml );
         } catch(\Exception $ex) {
 
             throw $ex;
         }
-
         return $result;
     }
 
@@ -58,7 +54,7 @@ class XmlParser extends  Parser{
      *
      * @return mixed
      */
-    protected  function recursiveXMLToArray($xml) {
+    protected  function recursiveParseToArray($xml) {
         if( $xml instanceof \SimpleXMLElement ) {
             $attributes = $xml->attributes();
 
@@ -77,7 +73,7 @@ class XmlParser extends  Parser{
                 return (string) $previous_xml; // for CDATA
 
             foreach($xml as $key => $value) {
-                $row[$key] = $this->recursiveXMLToArray($value);
+                $row[$key] = $this->recursiveParseToArray($value);
             }
             if ( is_string($value) ) {
                 // дошли до конца рекурсии
@@ -89,7 +85,6 @@ class XmlParser extends  Parser{
                 $row = $this->convert( $row );
 
             }
-
 
             if( isset( $attribute_array ) )
                 $row['@'] = $attribute_array; // Attributes

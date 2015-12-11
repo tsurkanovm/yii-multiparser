@@ -9,8 +9,6 @@
 namespace yii\multiparser;
 
 //@todo - заменить read на parse
-//@todo - xml - убрать из названий функций xml и array - это и так понятно
-
 
 use common\components\CustomVarDamp;
 
@@ -32,20 +30,8 @@ abstract class Parser
     /** @var array - массив с заголовком,
      * */
     public $keys = NULL;
-    /** @var bool
-    имеет ли файл заголовок который будет установлен ключами возвращемого массива*/
-    public $has_header_row = false;
-    /*
-     *если есть ключи, то колонки с пустыми значениями будут пропускаться (из ряда такие значения будут удаляться),
-     * например если в файле вторая колонка пустая то она будет удалена
-     * если есть $has_header_row - то первая значимая строка становится ключами, но пустые колонки не удаляются из ряда
-     * например если в файле вторая колонка пустая то ей будет назначен соответсвующий ключ (второй) из первой строки
-     * все описаное выше реализуется в дочернем семействе классов TableParser в методе filterRow()
-     * для xml происходит просто сопоставление переданных ключей с прочитанными
-    */
 
-
-
+    public abstract function read();
 
     public function setup()
     {
@@ -54,7 +40,7 @@ abstract class Parser
 
     protected function setupConverter()
     {
-        if ( $this->has_header_row || $this->keys !== NULL ) {
+        if ( !empty( $this->keys ) ) {
             // если у файла есть заголовок, то в результате имеем ассоциативный массив
             $this->converter_conf['hasKey'] = 1;
         }
@@ -67,11 +53,7 @@ abstract class Parser
 
             }
         }
-
-
     }
-
-    public abstract function read();
 
     /**
      * @param $arr
@@ -80,32 +62,24 @@ abstract class Parser
      */
     protected function convert( $arr )
     {
-
         if ($this->converter !== NULL) {
 
             $arr = $this->converter->convertByConfiguration( $arr, $this->converter_conf );
 
         }
-
-
         return $arr;
-
     }
 
     public final static function supportedExtension()
     {
-        return ['csv','xml','xlsx','txt'];
+        return ['csv','xml','xlsx','txt','xls'];
     }
 
     protected function cleanUp(  )
     {
-
         unset( $this->file );
         unset( $this->converter );
         unset( $this->converter_conf );
-
-
     }
-
 
 }

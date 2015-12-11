@@ -2,7 +2,7 @@
 /**
 
  */
-namespace common\components\parsers;
+namespace yii\multiparser;
 
 /**
  * Class XlsParser
@@ -66,36 +66,6 @@ class XlsParser extends TableParser
         }
     }
 
-    protected  function isEmptyRow(){
-
-        $is_empty = false;
-
-        if ( !$this->row ) {
-            return true;
-        }
-        if (  count( $this->row ) < $this->min_column_quantity ) {
-            return true;
-        }
-
-        $j = 0;
-        for ($i = 1; $i <= count( $this->row ); $i++) {
-
-            if ( !isset( $this->row[ $i - 1 ] ) ) {
-                continue;
-            }
-
-            if ( $this->isEmptyColumn( $this->row[$i - 1] ) ) {
-                $j++;
-            }
-
-            if ( $j >= $this->min_column_quantity ) {
-                $is_empty = true;
-                break;
-            }
-        }
-
-        return $is_empty;
-    }
 
     protected  function isEmptyColumn( $val ){
         return $val == '';
