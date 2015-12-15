@@ -23,6 +23,8 @@ class UploadFileParsingForm extends Model
     // 1 - csv template file from data/template.csv
     // 2 - xml template file from data/template.xml
     // 3 - xlsx template file from data/template.xlsx
+    // 4 - xls template file from data/template.xls
+    // 5 - txt template file from data/template.txt
     public $file_type = 0;
 
 
@@ -34,11 +36,11 @@ class UploadFileParsingForm extends Model
         }
 JS;
         return [
-            ['file_type', 'in', 'range' => range( 0, 3 ) ],
+            ['file_type', 'in', 'range' => range( 0, 5 ) ],
             ['file', 'required', 'when' => function(){
                 return !$this->file_type;
             } , 'whenClient' => $client_func],
-            [['file'], 'file', 'extensions' => ['csv', 'xlsx', 'xml'], 'checkExtensionByMimeType' => false ],
+            [['file'], 'file', 'extensions' => ['csv', 'xlsx', 'xml', 'xls', 'txt'], 'checkExtensionByMimeType' => false ],
             ['file_path', 'safe'],
 
         ];
