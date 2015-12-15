@@ -130,10 +130,14 @@ class XlsxParser extends TableParser
 
     protected function readStrings()
     {
-        $xml = simplexml_load_file($this->path_for_extract_files . '/xl/sharedStrings.xml');
-        foreach ($xml->children() as $item) {
-            $this->strings_arr[] = (string)$item->t;
+        $file_with_strings = $this->path_for_extract_files . '/xl/sharedStrings.xml';
+        if ( file_exists( $file_with_strings ) ) {
+            $xml = simplexml_load_file($file_with_strings);
+            foreach ($xml->children() as $item) {
+                $this->strings_arr[] = (string)$item->t;
+            }
         }
+
     }
 
 
@@ -170,7 +174,12 @@ class XlsxParser extends TableParser
 
                 if ( isset($attr['t']) ){
                     // it's not a value it's a string, so fetch it from string array
-                    $value = $this->strings_arr[$value];
+                    if( empty( $this->strings_arr[$value] ) ){
+                        $value = '';
+                    } else {
+                        $value = $this->strings_arr[$value];
+                    }
+
                 } else {
                     $value = (string)round( $value, $this->float_precision );
                 }

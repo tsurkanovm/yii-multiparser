@@ -15,7 +15,7 @@ class ObjectCreator {
             $class =  trim( $configuration['class'] );
             unset( $configuration['class'] );
         } else{
-            throw new \ErrorException('Error configuration - undefined class');
+            return null;
         }
 
         $object = new $class();

@@ -102,7 +102,16 @@ class ParserController extends Controller
                 'pageSize' => 10,
             ],
         ]);
+
+        if ( empty( $data[0] ) ) {
+            // если нет первого ряла - это xml custom-файл с вложенными узлами, массив ассоциативный (дерево),
+            // такой массив нет возможности вывести с помощью GridView
+            // просто выведем его как есть
+            echo "<pre>";
+            return print_r($data);
+        }
         // если отпарсенные данные - ассоциативный массив, то пользователю нечего выбирать
+        // но выведем его в GridView
         $assoc_data_arr = $this->is_assoc($data[0]);
 
         if ( $assoc_data_arr ) {

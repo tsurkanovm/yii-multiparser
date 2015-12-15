@@ -10,8 +10,6 @@ namespace yii\multiparser;
 
 //@todo - заменить read на parse
 
-use common\components\CustomVarDamp;
-
 abstract class Parser
 {
     public $converter_conf  = [];

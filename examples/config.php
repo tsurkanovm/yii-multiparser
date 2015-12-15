@@ -46,7 +46,6 @@ return [
             'template' =>
                 ['class' => 'yii\multiparser\XmlParser',
                     'node' => 'Товар',
-                    'has_header_row' => false,
                     'keys' => [
                         "BRAND" => 'Производитель',
                         "ARTICLE" => 'Код',
@@ -59,14 +58,9 @@ return [
                     'converter_conf' => [
                         'class' => 'yii\multiparser\Converter',
                         'configuration' => [
-                            'converter_conf' => [
-                            'class' => 'yii\multiparser\Converter',
-                            'configuration' => ["encode" => 'DESCR',
                                 "string" => ['DESCR', 'BRAND'],
                                 "float" => 'PRICE',
                                 "integer" => ['BOX', 'ADD_BOX'],
-                            ],
-                        ],
                         ],
                     ],
                 ],
@@ -82,17 +76,30 @@ return [
             ],
         ],
     'xlsx' =>
-        ['web' =>
-            ['class' => 'common\components\parsers\XlsxParser',
-                //         'path_for_extract_files' => \Yii::getAlias('@temp_upload') . '/xlsx/',
-                //'auto_detect_first_line' => true,
-                //'has_header_row' => true,
-                'active_sheet' => 1,
+        ['custom' =>
+            ['class' => 'yii\multiparser\XlsxParser',
+                'path_for_extract_files' => $_SERVER["DOCUMENT_ROOT"] . '/tests/_data/xlsx_tmp/',
                 'converter_conf' => [
-                    'class' => 'common\components\parsers\CustomConverter',
-                    'configuration' => ["string" => []],
+                    'class' => 'yii\multiparser\Converter',
+                    'configuration' => ["encode" => []],
                 ]
             ],
-        ]
+            'template' =>
+                ['class' => 'yii\multiparser\XlsxParser',
+                    'path_for_extract_files' => $_SERVER["DOCUMENT_ROOT"] . 'tests/_data/xlsx_tmp',
+                    'keys' => [
+                        0 => 'Original',
+                        1 => 'Replacement',
+                    ],
+                 ],
+            'basic_column' => [
+                Null => 'null',
+                "Description" => 'Название',
+                "Article" => 'Артикул',
+                "Price" => 'Цена',
+                "Brand" => 'Производитель',
+                "Count" => 'Количество',
+            ],
+        ],
 ];
 
