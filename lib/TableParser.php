@@ -64,42 +64,41 @@ abstract class TableParser extends Parser
 
     public function read()
     {
-        // получим первую значимую строку
-        $this->shiftToFirstValuableLine();
-
-        // первый проход, строка прочитана в shiftToFirstValuableLine
+        // первый проход
         $first_circle = true;
+        $this->current_row_number = 1;
 
         // будем считать количество пустых строк подряд - при достижении $empty_lines_quantity - считаем что это конец файла и выходим
         $empty_lines = 0;
         while ($empty_lines < $this->empty_lines_quantity) {
 
-            // прочтем строку из файла, если это не первый проход
-            if (!$first_circle){
-                $this->readRow();
-            }
-
-            $first_circle = false;
+            $this->readRow();
+            $this->current_row_number++;
 
             // уберем пустые колонки из ряда
-            if ($this->keys === NULL) {
+            if ( $this->keys === NULL ) {
                 $this->filterRow();
             }
 
-            if ($this->isEmptyRow()) {
+            if ( $this->isEmptyRow() ) {
                 //счетчик пустых строк
                 $empty_lines++;
-                $this->current_row_number++;
                 continue;
             }
+
+            if ( $first_circle ) {
+                // при первом проходе нужно учесть настройки поп поиску первой строки
+                // такие как first_line и  has_header_row
+                $this->shiftToFirstValuableLine();
+            }
+
+            $first_circle = false;
 
             // запустим конвертирование
             $this->adjustRowToSettings();
 
             // установим отпарсенную строку в итоговый массив результата
             $this->setResult();
-            // строка не пустая, имеем прочитанный массив значений
-            $this->current_row_number++;
 
             // если у нас установлен лимит, при  его достижении прекращаем парсинг
             if ($this->isLastLine())
@@ -111,23 +110,21 @@ abstract class TableParser extends Parser
     }
 
     /**
-     * определяет первую значимую строку,
-     * считывается файл пока в нем не встретится строка с непустыми колонками
-     * или пока не дойдет до first_line
+     * определяет первую значимую строку согласно first_line и has_header_row,
+     * считывается пока не дойдет до first_line
      * пропускает заголовок если он указан
      */
     protected function shiftToFirstValuableLine()
     {
-        // читаем пока не встретим значимую строку, или пока не дойдем до first_line
-        do {
-            $this->current_row_number++;
+        // читаем пока не дойдем до first_line
+        while ( $this->first_line > $this->current_row_number ) {
             $this->readRow();
-        } while ( $this->isEmptyRow() && ( $this->first_line < $this->current_row_number ) );
-
+            $this->current_row_number++;
+        }
         // если указан заголовок, то его мы тоже пропускаем (читаем далее)
         if( $this->has_header_row ) {
-            $this->current_row_number++;
             $this->readRow();
+            $this->current_row_number++;
         }
     }
 

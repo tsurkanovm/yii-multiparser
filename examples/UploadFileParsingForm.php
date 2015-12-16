@@ -58,7 +58,7 @@ JS;
         $data = Yii::$app->multiparser->parse( $this->file_path, $options );
 
         if( !is_array( $data ) || count($data) == 0 ){
-            throw new ErrorException("Reading error from file - {$this->file_path}");
+            throw new ErrorException("Parser return empty array. Check file and configuration settings (config.php)");
         }
 
         if(  !$this->file_path  && file_exists( $this->file_path ) )

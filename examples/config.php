@@ -86,10 +86,12 @@ return [
             ],
             'template' =>
                 ['class' => 'yii\multiparser\XlsxParser',
+                    'min_column_quantity' => 2,
+                    'active_sheet' => 1,
                     'path_for_extract_files' => $_SERVER["DOCUMENT_ROOT"] . '/tests/_data/xlsx_tmp/',
                     'keys' => [
-                        0 => 'Original',
-                        1 => 'Replacement',
+                        1 => 'Original',
+                        2 => 'Replacement',
                     ],
                  ],
             'basic_column' => [
@@ -107,6 +109,7 @@ return [
             ],
             'template' =>
                 ['class' => 'yii\multiparser\XlsParser',
+                    'empty_lines_quantity' => 4,
                     'converter_conf' => [
                         'class' => ' yii\multiparser\Converter',
                         'configuration' => ["encode" => [],
@@ -128,6 +131,7 @@ return [
         ['custom' =>
             ['class' => 'yii\multiparser\CsvParser',
                 'delimiter' => "\t",
+                'min_column_quantity' => 3,
                 'converter_conf' => [
                     'class' => 'yii\multiparser\Converter',
                     'configuration' => ["encode" => []],
@@ -135,16 +139,17 @@ return [
             ],
             'template' =>
                 ['class' => 'yii\multiparser\CsvParser',
+                    'min_column_quantity' => 3,
                     'delimiter' => "\t",
                     'keys' => [
                         0 => 'Brand',
-                        1 => 'Article',
+                        1 => 'Description',
                         2 => 'Price',
                         4 => 'Count',
                     ],
                     'converter_conf' => [
                         'class' => 'yii\multiparser\Converter',
-                        'configuration' => ["encode" => 'Brand',
+                        'configuration' => ["encode" => [],
                             "float" => 'Price',
                             "integer" => 'Count'
                         ]
