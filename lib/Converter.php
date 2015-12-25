@@ -58,7 +58,7 @@ class Converter implements ConverterInterface
     public static function convertToString($value)
     {
         $convert_func = function ($value_to_convert) {
-            return str_replace(array('!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '=', '-', '~', '`', '"', "'", ' ', '№', '%', ';', ':', '[', ']', '{', '}', '*', '?', '/', '\'', '|', '.', ',', '<', '>', '\\'), '', $value_to_convert);
+            return str_replace(array('!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+', '=', '-', '~', '`', '"', "'", '№', '%', ';', ':', '[', ']', '{', '}', '*', '?', '/', '\'', '|', '.', ',', '<', '>', '\\'), '', $value_to_convert);
         };
 
         if( is_string( $value ) ){

@@ -15,6 +15,7 @@ abstract class Parser
     public $converter_conf  = [];
     protected $converter = NULL;
 
+    //@todo - данные  реквизиты нужно инкапсулировать
     /** @var file-resource читаемого файла */
     public $file;
     /** @var string путь читаемого файла */
