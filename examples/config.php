@@ -19,7 +19,7 @@ return [
                     ],
                     'converter_conf' => [
                         'class' => 'yii\multiparser\Converter',
-                        'configuration' => ["encode" => 'Description',
+                        'configuration' => ['encode' => 'Description',
                             "string" => ['Description', 'Brand'],
                             "float" => 'Price',
                             "integer" => 'Count'

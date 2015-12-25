@@ -88,6 +88,10 @@ class ParserController extends Controller
                 return 'xml';
             case 3:
                 return 'xlsx';
+            case 4:
+                return 'xls';
+            case 5:
+                return 'txt';
             default:
                 return 'csv';
         }
@@ -140,7 +144,7 @@ class ParserController extends Controller
             $header_model = DynamicFormHelper::CreateDynamicModel($header_counts);
 
             // колонки для выбора возьмем из конфигурационного файла
-            $basicColumns = Yii::$app->multiparser->getConfiguration($this->file_extension, 'basic_column');;
+            $basicColumns = Yii::$app->multiparser->getConfiguration($this->file_extension, 'basic_column');
 
             return $this->render('results',
                 ['model' => $data,
