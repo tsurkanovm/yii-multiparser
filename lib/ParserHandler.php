@@ -72,14 +72,14 @@ class ParserHandler
 
     public function getCustomConfiguration($extension, $parameter)
     {
-        if (!count($this->configuration)) {
-            $this->setConfiguration(require(__DIR__ . '/config.php'));
+        if ( empty( $this->configuration ) ) {
+            $this->setConfiguration( require(__DIR__ . '/config.php') );
         }
 
-        if (!isset($this->configuration[$extension])) {
+        if ( !isset( $this->configuration[$extension] ) ) {
             throw new \ErrorException("Parser do not maintain file with extension  {$extension}");
         }
-        if (!isset($this->configuration[$extension][$parameter])) {
+        if ( !isset( $this->configuration[$extension][$parameter] ) ) {
             throw new \ErrorException("Parser configurator do not have settings for {$parameter} parameter");
         }
 
