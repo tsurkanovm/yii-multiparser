@@ -80,55 +80,29 @@ class CsvParsingTest extends \Codeception\TestCase\Test
         $this->assertEquals( 16, count( self::$data ), 'Output array does`t have 16 rows'  );
 
     }
+
+    public function setOptionDataProvider(){
+
+        $opt = [
+            [8, ['csv' => ['template' => ['first_line' => 10],],]],
+            [9, ['csv' => ['template' => ['first_line' => 10,  'has_header_row' => false],],]],
+            [17, ['csv' => ['template' => ['has_header_row' => false],],]],
+            [8, ['csv' => ['template' => ['first_line' => 10],],]],
+            [2, ['csv' => ['template' => ['last_line' => 3],],]]
+        ];
+
+        return $opt;
+    }
+
     /**
      * @depends testWithKeys
+     * @dataProvider setOptionDataProvider
      */
-    public function testWithKeysOnTruncate( ){
-        $sub_options =
-            ['csv' =>
-                ['template' =>
-                    ['has_header_row' => false
-                    ],
-                ],
-            ];
+    public function testWithKeysOnTruncate( $expectedResult,  $sub_options ){
+
         $options = array_merge_recursive( self::$options, $sub_options );
         $this->parseFileByOptions( $options );
-        $this->assertEquals( 17, count( self::$data ), 'Output (extended) array does`t have 17 rows'  );
-
-        $sub_options =
-            ['csv' =>
-                ['template' =>
-                    ['first_line' => 10
-                    ],
-                ],
-            ];
-        $options = array_merge_recursive( self::$options, $sub_options );
-        $this->parseFileByOptions( $options );
-        $this->assertEquals( 8, count( self::$data ), 'Output (truncate) array does`t have 8 rows (set first_line)'  );
-
-        $sub_options =
-            ['csv' =>
-                ['template' =>
-                    ['first_line' => 10,
-                        'has_header_row' => false,
-                    ],
-                ],
-            ];
-        $options = array_merge_recursive( self::$options, $sub_options );
-        $this->parseFileByOptions( $options );
-        $this->assertEquals( 9, count( self::$data ), 'Output (truncate) array does`t have 9 rows (set first_line and has_header_row = false)'  );
-
-        $sub_options =
-            ['csv' =>
-                ['template' =>
-                    ['last_line ' => 3,
-
-                    ],
-                ],
-            ];
-        $options = array_merge_recursive( self::$options, $sub_options );
-        $this->parseFileByOptions( $options );
-        $this->assertEquals( 3, count( self::$data ), 'Output (truncate) array does`t have 3 rows (set last_line)'  );
+        $this->assertEquals( $expectedResult, count( self::$data ), "Output (extended) array does`t have {$expectedResult} rows"  );
 
     }
 
