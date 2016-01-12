@@ -84,10 +84,10 @@ class CsvParsingTest extends \Codeception\TestCase\Test
     public function setOptionDataProvider(){
 
         $opt = [
-            [8, ['csv' => ['template' => ['first_line' => 10],],]],
-            [9, ['csv' => ['template' => ['first_line' => 10,  'has_header_row' => false],],]],
+            [7, ['csv' => ['template' => ['first_line' => 10],],]],
+            [8, ['csv' => ['template' => ['first_line' => 10,  'has_header_row' => false],],]],
             [17, ['csv' => ['template' => ['has_header_row' => false],],]],
-            [8, ['csv' => ['template' => ['first_line' => 10],],]],
+            [3, ['csv' => ['template' => ['last_line' => 3, 'has_header_row' => false],],]],
             [2, ['csv' => ['template' => ['last_line' => 3],],]]
         ];
 
