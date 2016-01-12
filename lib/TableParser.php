@@ -66,7 +66,7 @@ abstract class TableParser extends Parser
     {
         // первый проход
         $first_circle = true;
-        $this->current_row_number = 1;
+        $this->current_row_number = 0;
 
         // будем считать количество пустых строк подряд - при достижении $empty_lines_quantity - считаем что это конец файла и выходим
         $empty_lines = 0;
@@ -87,12 +87,11 @@ abstract class TableParser extends Parser
             }
 
             if ( $first_circle ) {
-                // при первом проходе нужно учесть настройки поп поиску первой строки
+                // при первом проходе нужно учесть настройки по поиску первой строки
                 // такие как first_line и  has_header_row
                 $this->shiftToFirstValuableLine();
+                $first_circle = false;
             }
-
-            $first_circle = false;
 
             // запустим конвертирование
             $this->adjustRowToSettings();
@@ -200,7 +199,7 @@ abstract class TableParser extends Parser
     protected function isLastLine()
     {
 
-        if (($this->last_line) && ($this->current_row_number > $this->last_line)) {
+        if (($this->last_line) && ($this->current_row_number >= $this->last_line)) {
             return true;
         }
         return false;
