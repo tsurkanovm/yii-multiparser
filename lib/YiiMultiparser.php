@@ -23,23 +23,29 @@ public $parserHandler;
     {
         parent::init();
         $this->parserHandler = new YiiParserHandler( );
-        $this->parserHandler->setConfiguration( $this->configuration );
-
+        if ( !empty( $this->configuration ) ) {
+            $this->setConfiguration( $this->configuration );
+        }
     }
 
 
     public function parse( $filePath, $options = [] ){
 
-       // $this->file_path = $file_path;
         $this->parserHandler->setup( $filePath, $options );
 
         return $this->parserHandler->run();
 
     }
 
-    public function getConfiguration( $extension, $parameter ){
+    public function getConfigurationByExtension( $extension, $parameter ){
 
         return $this->parserHandler->getCustomConfiguration( $extension, $parameter );
+
+    }
+
+    public function setConfiguration( $config ){
+
+        return  $this->parserHandler->setConfiguration( $config );
 
     }
 
