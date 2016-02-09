@@ -1,8 +1,7 @@
 <?php
 namespace yii\multiparser\module;
 
-use common\components\CustomVarDamp;
-use common\modules\parser\models\UploadFileParsingForm;
+use yii\multiparser\UploadFileParsingForm;
 use Yii;
 use yii\multiparser\DynamicFormHelper;
 use yii\web\Controller;
