@@ -2,7 +2,7 @@
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use common\modules\parser\widgets\parser_view\ParserViewAsset;
+use yii\multiparser\widgets\ParserViewAsset;
 
 ParserViewAsset::register($this);
 $title = '';

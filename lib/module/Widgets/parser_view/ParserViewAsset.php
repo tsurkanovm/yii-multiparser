@@ -12,9 +12,8 @@ use yii\web\AssetBundle;
 
 class ParserViewAsset extends AssetBundle {
 
-    public $sourcePath = '@common/modules/parser/widgets/parser_view/js';
     public $js = [
-        'parser-view.js',
+        '/js/parser-view.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',
