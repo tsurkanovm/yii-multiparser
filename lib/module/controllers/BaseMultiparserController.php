@@ -31,6 +31,10 @@ class BaseMultiparserController extends Controller
         ]);
     }
 
+    /**
+     * @return bool
+     * action save file to disc (files folder in parser module)
+     */
     public function actionSave()
     {
 

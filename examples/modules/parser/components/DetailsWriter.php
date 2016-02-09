@@ -11,7 +11,7 @@ namespace common\modules\parser\components;
 
 use app\models\DetailsTest;
 use yii\base\ErrorException;
-use common\modules\parser\components\ModelArrayValidator;
+use yii\multiparser\ModelArrayValidator;
 
 /**
  * Class PriceWriter
@@ -19,7 +19,7 @@ use common\modules\parser\components\ModelArrayValidator;
  * записывает в БД отпарсенные данные
  * запись происходит в несколько таблиц
  */
-class DetailsWriter extends  Writer
+class DetailsWriter extends  yii\multiparser\Writer
 {
 
     public function writeToDB( $update )

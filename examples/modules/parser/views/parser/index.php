@@ -1,6 +1,5 @@
 <?php
-use common\modules\parser\widgets\parser_view\ParserView;
-use yii\helpers\Html;
+use yii\multiparser\ParserView;
 
 echo ParserView::widget(['options' => $options]);
 
