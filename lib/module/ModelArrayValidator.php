@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Tsurkanov
- * Date: 26.11.2015
- * Time: 9:04
- */
 
-namespace yii\multiparser;
+namespace yii\multiparser\module;
 
 /**
  * Class ModelArrayValidator

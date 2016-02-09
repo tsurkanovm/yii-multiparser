@@ -6,7 +6,7 @@
  * Time: 17:19
  */
 
-namespace yii\multiparser;
+namespace yii\multiparser\module;
 
 interface MassiveDataValidatorInterface {
 

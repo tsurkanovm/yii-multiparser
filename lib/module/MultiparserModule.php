@@ -1,5 +1,5 @@
 <?php
-namespace yii\multiparser;
+namespace yii\multiparser\module;
 
 class MultiparserModule extends \yii\base\Module
 {

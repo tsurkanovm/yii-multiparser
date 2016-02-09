@@ -19,10 +19,8 @@
   "autoload": {
     "psr-4": {
       "yii\\multiparser\\": "lib\\",
-      "yii\\multiparser\\": "lib\\module\\",
-      "yii\\multiparser\\": "lib\\module\\components\\",
-      "yii\\multiparser\\": "lib\\module\\controllers\\",
-      "yii\\multiparser\\": "lib\\module\\Widgets\\"
+      "yii\\multiparser\\module\\": "lib\\module\\",
+      "yii\\multiparser\\widgets\\": "lib\\module\\widgets\\"
     }
   }
 }

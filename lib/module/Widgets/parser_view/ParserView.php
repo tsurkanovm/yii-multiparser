@@ -6,7 +6,7 @@
  * Time: 13:51
  */
 
-namespace yii\multiparser;
+namespace yii\multiparser\widgets;
 
 
 use yii\base\Widget;

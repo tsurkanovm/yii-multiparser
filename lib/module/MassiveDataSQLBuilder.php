@@ -6,7 +6,7 @@
  * Time: 12:45
  */
 
-namespace yii\multiparser;
+namespace yii\multiparser\module;
 
 
 use yii\base\Behavior;

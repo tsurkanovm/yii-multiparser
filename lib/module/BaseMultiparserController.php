@@ -1,5 +1,5 @@
 <?php
-namespace yii\multiparser;
+namespace yii\multiparser\module;
 
 use common\components\CustomVarDamp;
 use common\modules\parser\models\UploadFileParsingForm;

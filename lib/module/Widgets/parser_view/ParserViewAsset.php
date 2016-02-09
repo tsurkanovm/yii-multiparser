@@ -6,7 +6,7 @@
  * Time: 12:03
  */
 
-namespace yii\multiparser;
+namespace yii\multiparser\widgets;
 use yii\web\AssetBundle;
 
 

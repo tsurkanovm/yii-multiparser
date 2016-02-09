@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Cibermag
- * Date: 30.09.2015
- * Time: 9:34
- */
 
-namespace yii\multiparser;
-
+namespace yii\multiparser\module;
 
 
 abstract class Writer

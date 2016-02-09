@@ -6,6 +6,6 @@
  * Time: 10:13
  */
 
-class ParserController extends \yii\multiparser\BaseMultiparserController{
+class ParserController extends \yii\multiparser\module\BaseMultiparserController{
 
 }
