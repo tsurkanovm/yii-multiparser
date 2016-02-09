@@ -1,8 +1,8 @@
 <?php
 
-namespace app\models;
+namespace backend\models;
 
-use yii\multiparser\MassiveDataSQLBuilder;
+use yii\multiparser\module\MassiveDataSQLBuilder;
 use Yii;
 
 /**

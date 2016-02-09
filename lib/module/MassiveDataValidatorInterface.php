@@ -7,7 +7,7 @@
  */
 
 namespace yii\multiparser\module;
-
+use yii\base\Model;
 interface MassiveDataValidatorInterface {
 
     public function validate( $data );

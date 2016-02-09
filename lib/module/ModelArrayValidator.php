@@ -1,7 +1,7 @@
 <?php
 
 namespace yii\multiparser\module;
-
+use yii\base\Model;
 /**
  * Class ModelArrayValidator
  * @package common\components

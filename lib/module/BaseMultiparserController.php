@@ -15,7 +15,7 @@ use yii\web\Session;
  */
 class BaseMultiparserController extends Controller
 {
-    public $enableCsrfValidation = false;
+    //public $enableCsrfValidation = false;
     // @todo при выходе со страницы после чтения (без записи) - нужно удалять файл принудительно
     public function actionIndex()
     {
