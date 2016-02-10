@@ -9,7 +9,7 @@
 namespace common\modules\parser\components;
 
 
-use app\models\DetailsTest;
+use common\modules\parser\models\DetailsTest;
 use yii\base\ErrorException;
 use yii\multiparser\module\ModelArrayValidator;
 
