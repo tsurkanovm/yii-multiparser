@@ -14,6 +14,12 @@ use yii\data\ArrayDataProvider;
 use yii\multiparser\DynamicFormHelper;
 use yii\web\HttpException;
 
+/**
+ * Class ParserView
+ * @package yii\multiparser\widgets
+ * widget that provides ajax interaction with inheritors of BaseMultiparserController
+ *
+ */
 class ParserView extends Widget{
     public $options;
 
@@ -46,6 +52,11 @@ class ParserView extends Widget{
             ]);
     }
 
+    /**
+     * create and rendered view with parsed data
+     * @return mixed
+     * @throws HttpException
+     */
     protected function renderDataView()
     {
         $data = [];
@@ -62,12 +73,17 @@ class ParserView extends Widget{
         }
         $model = $this->options['model'];
 
+        if ( empty( $this->options['action_write'] ) ) {
+            throw new HttpException(200, 'Ошибка виджета. Не передано имя метода записи данных (action).');
+        }
+        $action_write = $this->options['action_write'];
+
         $provider = new ArrayDataProvider([
             'allModels' => $data,
         ]);
 
         if ( empty( $data[0] ) ) {
-            // если нет первого ряда - это xml custom-файл с вложенными узлами, массив ассоциативный (дерево),
+            // если нет первого ряда - это xml custom-файл с вложенными узлами, дерево,
             // такой массив нет возможности вывести с помощью GridView
             // просто выведем его как есть
             echo "<pre>";
@@ -84,9 +100,15 @@ class ParserView extends Widget{
                 // список колонок для выбора
                 'basic_column' => $basic_columns,
                 'write_model' => $model,
+                'action_write' => $action_write,
                 'dataProvider' => $provider]);
     }
 
+    /**
+     * create a dynamic model by given header
+     * @param array $header
+     * @return \yii\base\DynamicModel
+     */
     protected function createDynamicModel( array $header ){
         $last_index = end( array_flip( $header ) );
         $header_counts = $last_index + 1; // - количество колонок выбора формы предпросмотра

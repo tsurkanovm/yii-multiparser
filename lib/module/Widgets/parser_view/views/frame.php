@@ -9,6 +9,14 @@ $title = '';
 if ( !empty( $params['title'] ) ) {
     $title = $params['title'];
 }
+$action_save = '';
+if ( !empty( $params['action_save'] ) ) {
+    $action_save = $params['action_save'];
+}
+$action_read = '';
+if ( !empty( $params['action_read'] ) ) {
+    $action_read = $params['action_read'];
+}
 echo Html::tag( 'h3', $title );
 ?>
 
@@ -21,7 +29,7 @@ echo Html::tag( 'h3', $title );
             $model = $params['model'];
         }
 
-        $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data', 'id' => 'read-form', 'data-save_action' => Url::to( ['parser/save'] ), 'class' => 'form-inline'],'action'=>['parser/read']]);
+        $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data', 'id' => 'read-form', 'data-save_action' => Url::to( $action_save ), 'class' => 'form-inline'],'action'=>$action_read]);
 
         $this->beginBlock('model_data');
         if ( $model ) {

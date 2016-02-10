@@ -3,7 +3,7 @@ use yii\widgets\ActiveForm;
 use \yii\multiparser\DynamicFormHelper;
 use \yii\helpers\Html;
 
-    $form = ActiveForm::begin(['action'=>['parser/write'], 'options' => ['class' => 'form-inline', 'id' => 'write-form']]);
+    $form = ActiveForm::begin(['action'=>$action_write, 'options' => ['class' => 'form-inline', 'id' => 'write-form']]);
 \yii\widgets\Pjax::begin();
 echo DynamicFormHelper::CreateGridWithDropDownListHeader($dataProvider, $form, $header_model, $basic_column);
 \yii\widgets\Pjax::end();

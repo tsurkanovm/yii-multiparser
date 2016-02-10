@@ -9,14 +9,58 @@ use yii\web\HttpException;
 use yii\web\Response;
 use yii\web\Session;
 
-
+// @todo при выходе со страницы после чтения (без записи) - нужно удалять файл принудительно
 /**
- * Site controller
+ * Class BaseMultiparserController
+ * @package yii\multiparser\module
+ * base controller for parsing and writing data to DB
+ * this class should be inherited by custom controller class with specific scenario
  */
 class BaseMultiparserController extends Controller
 {
+    /**
+     * @var - string - name of current scenario. Should be set in child custom controller
+     * this attribute has used in getScenarioParameter method for define current scenario parameters
+     */
+    protected $scenario = '';
+    /**
+     * @var - array - path to save file action (e.g. - ['details/save']). Should be set in child custom controller
+     * this attribute has used in ParserView widget
+     */
+    protected $action_save = [];
+    /**
+     * @var - array - path to read (parse) file action (e.g. - ['details/read']). Should be set in child custom controller
+     * this attribute has used in ParserView widget
+     */
+    protected $action_read = [];
+    /**
+     * @var - array - path to write data action to DB (e.g. - ['details/write']). Should be set in child custom controller
+     * this attribute has used in ParserView widget
+     */
+    protected $action_write = [];
+
     //public $enableCsrfValidation = false;
-    // @todo при выходе со страницы после чтения (без записи) - нужно удалять файл принудительно
+
+    /**
+     * checkup required attributes
+     * @throws HttpException
+     */
+    public function init()
+    {
+
+        if ( empty( $this->action_save ) ){
+            throw new HttpException(200, 'Ошибка контроллера. Не передано имя метода для сохранения файла (action).');
+        }
+        if ( empty( $this->action_read ) ){
+            throw new HttpException(200, 'Ошибка виджета. Не передано имя метода для чтения данных (action).');
+        }
+        if ( empty( $this->action_write ) ){
+            throw new HttpException(200, 'Ошибка виджета. Не передано имя метода записи данных (action).');
+        }
+
+        parent::init();
+    }
+
     public function actionIndex()
     {
         $title = $this->getScenarioParameter('title');
@@ -25,7 +69,9 @@ class BaseMultiparserController extends Controller
 
         return $this->render('index', [
             'options' => ['model' => $upload_form,
-                'title' => $title
+                'title' => $title,
+                'action_save' => $this->action_save,
+                'action_read' => $this->action_read
             ],
         ]);
     }
@@ -36,13 +82,12 @@ class BaseMultiparserController extends Controller
      */
     public function actionSave()
     {
-
         if (empty($post) && !empty($_FILES)) {
             $file_name = Yii::$aliases['@file_path'] . '/' . basename($_FILES[0]['name']);
             if (move_uploaded_file($_FILES[0]['tmp_name'], $file_name )) {
-
+                // delete old file that was read in previous session
                 $this->deleteParseFile();
-
+                // safe file name in sessions params for further usage
                 Yii::$app->session->setFlash( 'file_name', $file_name );
                 return true;
             } else {
@@ -51,30 +96,45 @@ class BaseMultiparserController extends Controller
         }
     }
 
+    /**
+     * @return mixed
+     * @throws HttpException
+     * action that read file and rendering view with result (interact with ParserView widget)
+     */
     public function actionRead()
     {
+        // get form and validate user data
         $upload_form = $this->getReadUploadForm();
         $this->validateUploadForm( $upload_form );
 
+        // collect params for parser
         $file_path = $upload_form->file;
         $basic_columns = $this->getScenarioParameter('basic_columns');
         $last_line = ($upload_form->read_line_end == 'все') ? 0 : $upload_form->read_line_end;
         $custom_settings = ['last_line' => $last_line, 'file_path' => $file_path];
 
+        // run parser
         $data = $this->parseDataBySettings($custom_settings);
 
-        $write_upload_form = $this->getReadUploadForm();
+        $read_upload_form = $this->getReadUploadForm();
         return $this->renderAjax('index', [
             'options' => [
                 'mode' => 'data',
                 'data' => $data,
-                'model' => $write_upload_form,
+                'model' => $read_upload_form,
                 'basic_columns' => $basic_columns,
+                'action_write' => $this->action_write
             ]
         ]);
 
     }
 
+    /**
+     * @return string
+     * @throws HttpException
+     * write parsed data from file to DB by scenario
+     * used writer class that was defined in 'writer' module param
+     */
     public function actionWrite(){
         // validation static fields
         $model = $this->getWriteUploadForm();
@@ -101,7 +161,6 @@ class BaseMultiparserController extends Controller
 
         $this->deleteParseFile();
 
-        //CustomVarDamp::dumpAndDie($data);
         $writer_class = $this->getScenarioParameter('writer');
         $writer = new $writer_class( $data );
         try {
@@ -126,6 +185,12 @@ class BaseMultiparserController extends Controller
         return $response;
     }
 
+    /**
+     * @return Response
+     * provide action for any error in the module
+     * controller interact with view (ParserView widget) by ajax
+     * and all data and errors shown on main page
+     */
     public function actionError()
     {
         $exception = Yii::$app->errorHandler->exception;
@@ -138,7 +203,8 @@ class BaseMultiparserController extends Controller
             } else {
                 $response = new Response();
             }
-
+            // all errors we show on main page that widget provides
+            // so prepare data accordingly (like any other action response)
             $response->data = $this->renderAjax('index', [
                 'options' => ['title' => $msg,
                     'mode' => 'message']
@@ -148,23 +214,38 @@ class BaseMultiparserController extends Controller
         }
     }
 
-    protected function parseDataBySettings($custom_settings){
+    /**
+     * @param array $custom_settings
+     * @return array with parsed data
+     * @throws HttpException
+     */
+    protected function parseDataBySettings( array $custom_settings ){
         if ( empty( $custom_settings['file_path'] ) ) {
             $file_path = Yii::$app->session->getFlash('file_name');
         } else {
             $file_path = $custom_settings['file_path'];
             unset( $custom_settings['file_path'] );
         }
+        // read global parser setting from module param
         $parser_config = $this->getScenarioParameter('parser_config');
+        // merge global and custom settings (first and last line settings) for parser
         array_merge( $custom_settings, ['has_header_row' => false] );
 
+        // get parser component
         $parser = Yii::$app->controller->module->multiparser;
+        // setup configuration
         $parser->setConfiguration( $parser_config );
+        // run parser
         $data = $parser->parse( $file_path, $custom_settings );
 
         return $data;
 }
 
+    /**
+     * @param $model
+     * @throws HttpException
+     * set file attribute from session and validate form
+     */
     protected function validateUploadForm(&$model)
     {
         if ($model->load(Yii::$app->request->post())) {
@@ -185,6 +266,11 @@ class BaseMultiparserController extends Controller
     }
 
 
+    /**
+     * @param $dynamic_model
+     * @throws HttpException
+     * validate dynamic model
+     */
     protected function validateDynamicUploadForm(&$dynamic_model){
 
         $arr_attributes = $dynamic_model->toArray();
@@ -210,10 +296,16 @@ class BaseMultiparserController extends Controller
         }
     }
 
+    /**
+     * @param string $parameter - that we want to read
+     * @return mixed - value of parameter for current scenario
+     * @throws HttpException
+     */
     protected function getScenarioParameter($parameter = '')
     {
-        //$scenario = Yii::$app->request->get('scenario');
-        $scenario = 'details';
+        // get current scenario
+        $scenario = $this->scenario;
+        // get current module params
         $configuration = Yii::$app->controller->module->params;
         if (empty($configuration['scenarios_config'])) {
             throw new HttpException(200, 'В модуле не определены настройки сценариев - module->params[\'scenarios_config\']');
@@ -234,6 +326,10 @@ class BaseMultiparserController extends Controller
 
     }
 
+    /**
+     * @return UploadFileParsingForm in a read mode
+     * @throws HttpException - if 'parser_config' don't set for current scenario
+     */
     protected function getReadUploadForm(){
 
         $parser_config = $this->getScenarioParameter('parser_config');
@@ -243,6 +339,20 @@ class BaseMultiparserController extends Controller
         return $upload_form;
     }
 
+    /**
+     * @return UploadFileParsingForm in a write mode
+     */
+    protected function getWriteUploadForm(){
+
+        $upload_form = new UploadFileParsingForm();
+        $upload_form->scenario = UploadFileParsingForm::SCENARIO_WRITE;
+
+        return $upload_form;
+    }
+
+    /**
+     * @return \yii\base\DynamicModel - with filled attributes from user (post)
+     */
     protected function getDynamicUploadForm(){
 
         //получим колонки которые выбрал пользователь
@@ -253,14 +363,11 @@ class BaseMultiparserController extends Controller
         return $dynamic_model;
     }
 
-    protected function getWriteUploadForm(){
-
-        $upload_form = new UploadFileParsingForm();
-        $upload_form->scenario = UploadFileParsingForm::SCENARIO_WRITE;
-
-        return $upload_form;
-    }
-
+    /**
+     * @param $model
+     * @throws HttpException
+     * if a given model has errors - this errors converting into string and threw by HttpException
+     */
     protected function generateValidateErrorException( $model ){
 
         $errors_str = 'Ошибка формы загрузки данных:';
@@ -271,6 +378,10 @@ class BaseMultiparserController extends Controller
         throw new HttpException( 200, $errors_str );
 
     }
+
+    /**
+     * if in current session file was already has read - clear session flash and delete the file
+     */
     protected function deleteParseFile(){
 
         if (Yii::$app->session->hasFlash('file_name')) {
@@ -324,6 +435,7 @@ class BaseMultiparserController extends Controller
 
         return $value_arr;
     }
+
 
 }
 

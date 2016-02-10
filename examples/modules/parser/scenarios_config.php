@@ -2,13 +2,14 @@
 return [
     'details' =>
         ['parser_config' =>
-            ['csv' =>
+            [   'csv' =>
                 ['class' => 'yii\multiparser\CsvParser',
                     'converter_conf' => [
                         'class' => 'yii\multiparser\Converter',
                         'configuration' => ['encode' => []],
                     ],
                 ],
+
                 'xls' =>
                     ['class' => 'yii\multiparser\XlsParser',
                         'converter_conf' => [
@@ -25,7 +26,6 @@ return [
                 'price' => 'Цена',
                 'brand' => 'Производитель',
                 'count' => 'Количество',
-                'discount' => 'Скидка',
             ],
 
             'require_columns' => [
