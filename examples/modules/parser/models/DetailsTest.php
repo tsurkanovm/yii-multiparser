@@ -29,8 +29,8 @@ class DetailsTest extends \yii\db\ActiveRecord
 
             'SQLBuilder' => [
                 'class' => MassiveDataSQLBuilder::className(),
-                'batch' => 500,
-                'keys' =>  [
+                'batch' => 500, // размер пакета вставляемых данных
+                'keys' =>  [ // поля которые являются клчевыми - если они дублируются до данные - обновляются а не записываются
                     'article',
                    // 'brand',
                 ],
